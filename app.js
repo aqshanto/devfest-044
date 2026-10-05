@@ -313,6 +313,34 @@
     const route = data && start ? Router.findRoute(data, state, start) : null;
     if (data) renderMapState(route);
     renderResult(route);
+    saveSession();
+  }
+
+  // Save progress (dataset, hazards, start) in this browser so a reload resumes where you left off.
+  function saveSession() {
+    if (!data) return;
+    try {
+      localStorage.setItem('se-session', JSON.stringify({
+        data, start, mode,
+        bn: [...state.blockedNodes], be: [...state.blockedEdges], ce: [...state.closedExits],
+      }));
+    } catch (e) { /* storage full or unavailable */ }
+  }
+
+  function restoreSession() {
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem('se-session')); } catch (e) { return false; }
+    if (!s || !s.data || Router.validate(s.data).length) return false;
+    loadText(JSON.stringify(s.data));
+    const nodes = new Map(data.nodes.map(n => [n.id, n]));
+    const edges = new Set(data.edges.map(e => e.id));
+    state.blockedNodes = new Set((s.bn || []).filter(id => nodes.has(id) && nodes.get(id).type !== 'exit'));
+    state.blockedEdges = new Set((s.be || []).filter(id => edges.has(id)));
+    state.closedExits = new Set((s.ce || []).filter(id => nodes.has(id) && nodes.get(id).type === 'exit'));
+    start = nodes.has(s.start) && nodes.get(s.start).type !== 'exit' ? s.start : null;
+    mode = s.mode === 'hazard' ? 'hazard' : 'start';
+    render();
+    return true;
   }
 
   // ---------- Wiring ----------
@@ -385,6 +413,9 @@
   $('#start').addEventListener('change', ev => setStart(ev.target.value));
 
   render();
+  // Resume a saved session unless the URL asks for a specific demo state.
+  const hasUrlState = /[?&](start|block|close)=/.test(location.search);
+  if (!hasUrlState && restoreSession()) return;
   // Auto-load the bundled sample for a ready-to-use demo (silently skipped on file://).
   fetch('building.json').then(r => r.ok ? r.text() : null).then(txt => {
     if (!txt || data) return;

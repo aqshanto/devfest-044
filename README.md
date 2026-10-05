@@ -35,11 +35,16 @@ Dijkstra over the graph with blocked nodes (and their incident edges), blocked e
 - Light / dark theme follows the OS
 - Responsive layout (works on mobile)
 - Bundled sample auto-loads for a quick demo
+- Shareable state via URL, e.g. `?start=R1&block=C2&close=E1&lang=bn`
 
 ## Screenshots
 | Baseline (R1 → E1, cost 7) | After blocking C2 (R1 → E2, cost 11) |
 |---|---|
 | ![baseline](screenshots/baseline.png) | ![blocked C2](screenshots/blocked-c2.png) |
+
+Bangla mode, both exits closed → *No route available*:
+
+![bangla](screenshots/bangla.png)
 
 ## Known issues
 - `<fill in>`

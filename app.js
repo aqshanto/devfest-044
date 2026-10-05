@@ -338,5 +338,27 @@
 
   render();
   // Auto-load the bundled sample for a ready-to-use demo (silently skipped on file://).
-  fetch('building.json').then(r => r.ok ? r.text() : null).then(txt => { if (txt && !data) loadText(txt); }).catch(() => {});
+  fetch('building.json').then(r => r.ok ? r.text() : null).then(txt => {
+    if (!txt || data) return;
+    loadText(txt);
+    applyUrlState();
+  }).catch(() => {});
+
+  // Shareable demo state: ?start=R1&block=C2,L04&close=E1 (applies on top of initial_state).
+  function applyUrlState() {
+    if (!data) return;
+    const q = new URLSearchParams(location.search);
+    const ids = k => (q.get(k) || '').split(',').filter(Boolean);
+    const nodes = new Map(data.nodes.map(n => [n.id, n]));
+    const edgeIds = new Set(data.edges.map(e => e.id));
+    ids('block').forEach(id => {
+      if (edgeIds.has(id)) state.blockedEdges.add(id);
+      else if (nodes.has(id) && nodes.get(id).type !== 'exit') state.blockedNodes.add(id);
+    });
+    ids('close').forEach(id => { if (nodes.has(id) && nodes.get(id).type === 'exit') state.closedExits.add(id); });
+    const s = q.get('start');
+    if (s && nodes.has(s) && nodes.get(s).type !== 'exit') start = s;
+    if (q.get('lang') === 'bn' || q.get('lang') === 'en') lang = q.get('lang');
+    render();
+  }
 })();

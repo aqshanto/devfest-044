@@ -2,10 +2,10 @@
 
 AI DevFest 2026 · Vibe Coding (Solo)
 
-- **Name:** `<YOUR FULL NAME>`
-- **Registration number:** `<REG NO>`
-- **Live link (HTTPS):** `<GITHUB PAGES URL>`
-- **Repository:** `<REPO URL>`
+- **Name:** Md Abdul Quym Shanto
+- **Registration number:** 044
+- **Live link (HTTPS):** https://devfest-044.vercel.app/
+- **Repository:** https://github.com/aqshanto/devfest--004-
 
 > Educational simulation only, not a certified evacuation planning tool.
 
@@ -47,7 +47,7 @@ Bangla mode, both exits closed → *No route available*:
 ![bangla](screenshots/bangla.png)
 
 ## Known issues
-- `<fill in>`
+- None known. The map auto-scales node coordinates to fit; very dense graphs (60 nodes) may have overlapping labels.
 
 ## AI tools used
 - Claude Code (Claude Opus 5.5): planning, code generation, testing

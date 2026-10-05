@@ -40,3 +40,18 @@ building non-empty · 2–60 nodes · 1–150 edges · unique ids · non-empty l
 | R1 + close E1, E2 | No route available |
 | Select R2 | R2-C3-C4-E2, 7 |
 | R1 then block R1 | Starting location blocked |
+
+## Fixed decisions
+- **No backend.** Rulebook §5.1 forbids participant backend/serverless (disqualification). Frontend only.
+- **Deploy:** Vercel, static, no build. Framework preset "Other", root `./`, no build command, output `./`. (Render Static Site also works: publish dir `.`, no build command.)
+- **Structure (flat, deploy-ready):** `index.html` at root; `screenshots/`, `test.js`, docs at root.
+- **Commits:** small commit + push after every finished feature/fix (not just 3). Each message = what changed + `Prompt: "..."`. Never rewrite pushed history.
+- **AI budget:** small targeted edits, no rewrites of whole files, short replies.
+
+## Remaining steps (each = 1 commit + push)
+1. Push to GitHub + fill name/reg no in README & LICENSE
+2. Vercel deploy + live link in README
+3. `test.js` (sample checks + tie + invalid input)
+4. Screenshots (baseline, C2 blocked)
+5. Polish/bonus (PNG export) if time
+6. Final README check → submit form

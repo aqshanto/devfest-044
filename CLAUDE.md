@@ -16,5 +16,6 @@ Project: **Smart Escape** — AI DevFest 2026 vibe-coding entry. See `plan.md` f
 - Keep animations brief (≤300 ms) and respect `prefers-reduced-motion`.
 
 ## Commands
-- Run locally: `npx serve .` (or open `index.html`; the sample auto-load needs http).
+- Run locally: `python -m http.server 5173` (or open `index.html`).
+- Deploy: Vercel static (no build). No backend allowed.
 - Test: `node test.js`

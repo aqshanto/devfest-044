@@ -86,6 +86,28 @@
   // state: {blockedNodes:Set, blockedEdges:Set, closedExits:Set}
   // Returns {status:'ok', path, edges, exit, cost} | {status:'noStart'|'startBlocked'|'noRoute'}
   function findRoute(data, state, start) {
+    const r = search(data, state, start);
+    if (r.status) return r;
+    const list = exitRoutes(r);
+    if (!list.length) return { status: 'noRoute' };
+    return Object.assign({ status: 'ok' }, list[0]);
+  }
+
+  // Best route to every reachable open exit, sorted by cost then exit ID.
+  function routesByExit(data, state, start) {
+    const r = search(data, state, start);
+    return r.status ? [] : exitRoutes(r);
+  }
+
+  function exitRoutes(r) {
+    const list = [];
+    for (const [id, b] of r.best) {
+      if (r.nodeById.get(id).type === 'exit') list.push({ exit: id, cost: b.cost, path: b.path, edges: b.edges });
+    }
+    return list.sort((a, b) => a.cost - b.cost || (a.exit < b.exit ? -1 : 1));
+  }
+
+  function search(data, state, start) {
     const nodeById = new Map(data.nodes.map(n => [n.id, n]));
     const s = nodeById.get(start);
     if (!s || s.type === 'exit') return { status: 'noStart' };
@@ -128,16 +150,10 @@
       }
     }
 
-    let pick = null;
-    for (const [id, b] of best) {
-      if (nodeById.get(id).type !== 'exit') continue;
-      if (!pick || b.cost < pick.b.cost || (b.cost === pick.b.cost && id < pick.id)) pick = { id, b };
-    }
-    if (!pick) return { status: 'noRoute' };
-    return { status: 'ok', path: pick.b.path, edges: pick.b.edges, exit: pick.id, cost: pick.b.cost };
+    return { best, nodeById };
   }
 
-  const api = { validate, findRoute, lexLess };
+  const api = { validate, findRoute, routesByExit, lexLess };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Router = api;
 })(this);

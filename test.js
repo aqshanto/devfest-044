@@ -47,6 +47,10 @@ check('Closed exit not crossed', show(findRoute(through, S({ x: ['E1'] }), 'S'))
 const disc = g([['S', 'room'], ['R', 'room'], ['E', 'exit']], [['R', 'E', 1]]);
 check('Disconnected', show(findRoute(disc, S(), 'S')), 'noRoute');
 
+// Alternatives: best route per exit, sorted by cost
+const { routesByExit } = require('./router.js');
+check('Alternatives per exit', routesByExit(sample, S(), 'R1').map(r => `${r.exit}:${r.cost}`).join(','), 'E1:7,E2:10');
+
 // Validation
 check('Sample is valid', validate(sample).length, 0);
 const bad = (name, mut) => { const d = JSON.parse(JSON.stringify(sample)); mut(d); check('Reject: ' + name, validate(d).length > 0, true); };

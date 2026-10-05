@@ -167,6 +167,15 @@ select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--
 .node.walk .body { animation: pulse .6s ease-in-out; }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
 
+.alts { display: flex; flex-direction: column; gap: 6px; }
+.alt { text-align: left; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; transition: all .15s; }
+.alt small { display: block; color: var(--muted); }
+.alt:hover { border-color: var(--start); }
+.alt[aria-pressed="true"] { border-color: var(--start); background: color-mix(in srgb, var(--start) 15%, transparent); }
+.alt .tag { float: right; font-size: 11px; font-weight: 700; color: var(--ok-ink); background: var(--ok-bg); padding: 1px 6px; border-radius: 999px; }
+.alt-line { fill: none; stroke: var(--start); stroke-width: 5; stroke-dasharray: 10 8; stroke-linecap: round; pointer-events: none; opacity: .95; animation: march 1s linear infinite; }
+@keyframes march { to { stroke-dashoffset: -18; } }
+
 .hz { display: flex; flex-wrap: wrap; gap: 6px; }
 .hz button {
   padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink);

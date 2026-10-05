@@ -16,6 +16,7 @@
   let hc = false;
   let walkIdx = -1;       // active walkthrough step, -1 = none
   let walkTimer = null;
+  let previewExit = null; // exit whose alternative route is previewed
   try { hc = localStorage.getItem('se-hc') === '1'; } catch (e) { /* ignore */ }
   let nodeEls = new Map();
   let edgeEls = new Map();
@@ -83,6 +84,7 @@
 
     const gEdges = el('g', {}, svg);
     el('polyline', { id: 'routeLine', class: 'route-line', points: '' }, svg);
+    el('polyline', { id: 'altLine', class: 'alt-line', points: '' }, svg);
     const gCosts = el('g', {}, svg);
     const gNodes = el('g', {}, svg);
 
@@ -288,9 +290,10 @@
     st.className = 'status ' + cls;
     st.textContent = msg;
 
-    if (!route || route.status !== 'ok') { res.hidden = true; $('#walk').hidden = true; return; }
+    if (!route || route.status !== 'ok') { res.hidden = true; $('#walk').hidden = true; $('#alts').hidden = true; drawAlt(null); return; }
     res.hidden = false;
     renderSteps(route);
+    renderAlts();
     const p = $('#rPath');
     p.innerHTML = '';
     route.path.forEach((id, i) => {
@@ -305,6 +308,34 @@
     const ex = data.nodes.find(n => n.id === route.exit);
     $('#rExit').textContent = `${ex.id} · ${ex.label}`;
     $('#rCost').textContent = `${route.cost}  (${route.edges.length} ${t('corridors')})`;
+  }
+
+  function renderAlts() {
+    const list = Router.routesByExit(data, state, start);
+    if (!list.some(r => r.exit === previewExit)) previewExit = null;
+    $('#alts').hidden = list.length < 2;
+    const box = $('#altList');
+    box.innerHTML = '';
+    list.forEach((r, i) => {
+      const ex = data.nodes.find(n => n.id === r.exit);
+      const b = document.createElement('button');
+      b.className = 'alt';
+      b.setAttribute('aria-pressed', previewExit === r.exit);
+      if (i === 0) { const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = t('best'); b.appendChild(tag); }
+      b.appendChild(document.createTextNode(`${ex.id} · ${ex.label} — ${t('cost')}: ${r.cost}`));
+      const sm = document.createElement('small');
+      sm.textContent = r.path.join(' → ');
+      b.appendChild(sm);
+      b.addEventListener('click', () => { previewExit = previewExit === r.exit ? null : r.exit; render(); });
+      box.appendChild(b);
+    });
+    drawAlt(list.find(r => r.exit === previewExit) || null);
+  }
+
+  function drawAlt(r) {
+    const line = $('#altLine');
+    if (!line) return;
+    line.setAttribute('points', r ? r.path.map(id => { const p = pos.get(id); return `${p.x},${p.y}`; }).join(' ') : '');
   }
 
   function renderSteps(route) {

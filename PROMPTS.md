@@ -8,5 +8,5 @@ Prompt: "Read the problem PDF and rulebook, make plan.md, CLAUDE.md, AGENTS.md, 
 ## Commit 2: Tests, screenshots, README
 Prompt: "Add node test for the 5 sample checks plus tie/invalid cases, capture baseline and C2-blocked screenshots, finish README."
 
-## Commit 3: Polish / bonus
-Prompt: "(fill in)"
+## Bonus features (PNG export, high contrast, save progress, walkthrough, alternatives, drag & drop)
+Prompt: "ekhn o 1.30 hours time ase, tai amra aro onk kisu add krote pari"

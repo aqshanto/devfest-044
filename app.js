@@ -457,6 +457,16 @@
     render();
   });
   $('#png').addEventListener('click', exportPng);
+  // Drag & drop a JSON file onto the map to import it.
+  const wrap = $('.map-wrap');
+  wrap.addEventListener('dragover', ev => { ev.preventDefault(); wrap.dataset.drop = t('dropHere'); wrap.classList.add('drag'); });
+  wrap.addEventListener('dragleave', () => wrap.classList.remove('drag'));
+  wrap.addEventListener('drop', ev => {
+    ev.preventDefault();
+    wrap.classList.remove('drag');
+    const f = ev.dataTransfer.files[0];
+    if (f) f.text().then(loadText);
+  });
   $('#play').addEventListener('click', togglePlay);
 
   // Export the current map (with route and hazards) as a PNG, inlining computed styles.

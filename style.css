@@ -81,6 +81,8 @@ html[lang="bn"] body { font-family: 'Hind Siliguri', Inter, system-ui, sans-seri
 #map { width: 100%; height: auto; display: block; max-height: 70vh; }
 [hidden] { display: none !important; }
 .edge { cursor: pointer; }
+.map-wrap.drag { outline: 3px dashed var(--start); outline-offset: -6px; }
+.map-wrap.drag::after { content: attr(data-drop); position: absolute; inset: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--card) 80%, transparent); font-weight: 700; }
 .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); padding: 20px; text-align: center; }
 
 /* ---- SVG map ---- */

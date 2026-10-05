@@ -31,6 +31,12 @@ No build step. Plain HTML/CSS/JS.
 Dijkstra over the graph with blocked nodes (and their incident edges), blocked edges and closed exits removed. Each node keeps its best `(cost, path)` pair, compared by cost and then by the lexicographic node-ID sequence. The chosen exit is the one with minimum cost, ties broken by the smallest exit ID. Cost is always the sum of edge costs, never coordinates or hop count. Logic is in `router.js`.
 
 ## Bonus features
+- **Alternative routes:** best route to every open exit, ranked by cost; click to preview it as a dashed line on the map
+- **Advanced route walkthrough:** step-by-step directions (corridor, added cost, running total) with Play/Stop that pulses each node
+- **PNG export** of the current map, route and hazards
+- **High-contrast mode** toggle (remembered)
+- **Saving progress:** dataset, hazards and start are saved in localStorage and restored on reload
+- **Drag & drop** a JSON file onto the map to import it
 - Keyboard-accessible map nodes (Tab + Enter) and focus outlines
 - Light / dark theme follows the OS
 - Responsive layout (works on mobile)

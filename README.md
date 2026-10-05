@@ -5,7 +5,7 @@ AI DevFest 2026 · Vibe Coding (Solo)
 - **Name:** Md Abdul Quym Shanto
 - **Registration number:** 044
 - **Live link (HTTPS):** https://devfest-044.vercel.app/
-- **Repository:** https://github.com/aqshanto/devfest--004-
+- **Repository:** https://github.com/aqshanto/devfest-044
 
 > Educational simulation only, not a certified evacuation planning tool.
 

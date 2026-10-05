@@ -14,6 +14,8 @@
   let errors = null;      // last import errors
   let lastRouteKey = '';
   let hc = false;
+  let walkIdx = -1;       // active walkthrough step, -1 = none
+  let walkTimer = null;
   try { hc = localStorage.getItem('se-hc') === '1'; } catch (e) { /* ignore */ }
   let nodeEls = new Map();
   let edgeEls = new Map();
@@ -258,6 +260,7 @@
     const key = route && route.status === 'ok' ? route.path.join('>') : '';
     if (key === lastRouteKey) return;
     lastRouteKey = key;
+    stopWalk();
     if (!key) { line.setAttribute('points', ''); return; }
     const pts = route.path.map(id => pos.get(id));
     line.setAttribute('points', pts.map(p => `${p.x},${p.y}`).join(' '));
@@ -285,8 +288,9 @@
     st.className = 'status ' + cls;
     st.textContent = msg;
 
-    if (!route || route.status !== 'ok') { res.hidden = true; return; }
+    if (!route || route.status !== 'ok') { res.hidden = true; $('#walk').hidden = true; return; }
     res.hidden = false;
+    renderSteps(route);
     const p = $('#rPath');
     p.innerHTML = '';
     route.path.forEach((id, i) => {
@@ -301,6 +305,57 @@
     const ex = data.nodes.find(n => n.id === route.exit);
     $('#rExit').textContent = `${ex.id} · ${ex.label}`;
     $('#rCost').textContent = `${route.cost}  (${route.edges.length} ${t('corridors')})`;
+  }
+
+  function renderSteps(route) {
+    $('#walk').hidden = false;
+    $('#play').textContent = walkTimer ? t('stop') : t('play');
+    const label = id => data.nodes.find(n => n.id === id).label;
+    const ol = $('#steps');
+    ol.innerHTML = '';
+    const items = [t('stepStart', { id: route.path[0], label: label(route.path[0]) })];
+    let total = 0;
+    route.edges.forEach((eid, i) => {
+      const e = data.edges.find(x => x.id === eid);
+      const to = route.path[i + 1];
+      total += e.cost;
+      const isLast = i === route.edges.length - 1;
+      items.push(t('stepGo', { edge: eid, cost: e.cost, id: to, label: label(to), total }));
+      if (isLast) items.push(t('stepExit', { id: to, label: label(to), total }));
+    });
+    items.forEach((txt, i) => {
+      const li = document.createElement('li');
+      li.textContent = txt;
+      li.classList.toggle('active', i === walkIdx);
+      ol.appendChild(li);
+    });
+  }
+
+  // Walkthrough playback: highlight each step and pulse its node on the map.
+  function walkNodeAt(route, i) {
+    if (i === 0) return route.path[0];
+    return route.path[Math.min(i, route.path.length - 1)];
+  }
+  function stopWalk() {
+    clearInterval(walkTimer);
+    walkTimer = null;
+    walkIdx = -1;
+  }
+  function togglePlay() {
+    const route = data && start ? Router.findRoute(data, state, start) : null;
+    if (!route || route.status !== 'ok') return;
+    if (walkTimer) { stopWalk(); render(); return; }
+    const steps = route.edges.length + 2;
+    walkIdx = 0;
+    const tick = () => {
+      if (walkIdx >= steps) { stopWalk(); render(); return; }
+      const g = nodeEls.get(walkNodeAt(route, walkIdx));
+      if (g) { g.classList.remove('walk'); void g.getBBox(); g.classList.add('walk'); }
+      render();
+      walkIdx++;
+    };
+    walkTimer = setInterval(tick, 700);
+    tick();
   }
 
   function render() {
@@ -371,6 +426,7 @@
     render();
   });
   $('#png').addEventListener('click', exportPng);
+  $('#play').addEventListener('click', togglePlay);
 
   // Export the current map (with route and hazards) as a PNG, inlining computed styles.
   function exportPng() {

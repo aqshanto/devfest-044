@@ -196,3 +196,15 @@ select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Compact header and spacing on phones */
+@media (max-width: 640px) {
+  .topbar { padding: 10px 16px; }
+  .brand h1 { font-size: 19px; }
+  .actions { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 6px; }
+  .btn { padding: 7px 6px; font-size: 13px; text-align: center; }
+  .layout { padding: 10px 16px; gap: 10px; }
+  .map-card { padding: 10px; }
+  .map-wrap { min-height: 220px; }
+  .legend { gap: 8px; font-size: 12px; }
+}

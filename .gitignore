@@ -1,0 +1,4 @@
+*.pdf
+README_START_HERE.txt
+node_modules/
+.claude/

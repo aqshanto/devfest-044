@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Escape</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1 data-i18n="title">Smart Escape</h1>
+      <p data-i18n="subtitle" class="sub"></p>
+    </div>
+    <div class="actions">
+      <label class="btn">
+        <span data-i18n="import"></span>
+        <input id="file" type="file" accept=".json,application/json" hidden>
+      </label>
+      <button id="sample" class="btn" data-i18n="loadSample"></button>
+      <button id="reset" class="btn" data-i18n="reset"></button>
+      <button id="lang" class="btn btn-accent" data-i18n="lang"></button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="map-card">
+      <div class="map-head">
+        <h2 id="buildingName">—</h2>
+        <div class="mode" role="radiogroup">
+          <span data-i18n="modeLabel" class="muted"></span>
+          <button id="modeStart" class="seg" role="radio" data-i18n="modeStart"></button>
+          <button id="modeHazard" class="seg" role="radio" data-i18n="modeHazard"></button>
+        </div>
+      </div>
+      <div class="map-wrap">
+        <svg id="map" role="img" aria-label="Building map"></svg>
+        <div id="empty" class="empty" data-i18n="stNoData"></div>
+      </div>
+      <div class="legend">
+        <span><i class="lg lg-room"></i><b data-i18n="legRoom"></b></span>
+        <span><i class="lg lg-junction"></i><b data-i18n="legJunction"></b></span>
+        <span><i class="lg lg-exit"></i><b data-i18n="legExit"></b></span>
+        <span><i class="lg lg-start"></i><b data-i18n="legStart"></b></span>
+        <span><i class="lg lg-route"></i><b data-i18n="legRoute"></b></span>
+        <span><i class="lg lg-blocked"></i><b data-i18n="legBlocked"></b></span>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div id="errors" class="card errors" hidden></div>
+
+      <div class="card">
+        <label for="start" class="field-label" data-i18n="startLabel"></label>
+        <select id="start"></select>
+      </div>
+
+      <div class="card">
+        <h3 data-i18n="routeTitle"></h3>
+        <div id="status" class="status"></div>
+        <dl id="result" class="result" hidden>
+          <dt data-i18n="path"></dt><dd id="rPath" class="chips"></dd>
+          <dt data-i18n="exit"></dt><dd id="rExit"></dd>
+          <dt data-i18n="cost"></dt><dd id="rCost" class="cost"></dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <h3 data-i18n="hazardsTitle"></h3>
+        <h4 data-i18n="nodesGroup"></h4>
+        <div id="hzNodes" class="hz"></div>
+        <h4 data-i18n="exitsGroup"></h4>
+        <div id="hzExits" class="hz"></div>
+        <h4 data-i18n="edgesGroup"></h4>
+        <div id="hzEdges" class="hz"></div>
+      </div>
+
+      <div class="card help">
+        <p data-i18n="help"></p>
+        <p class="muted small" data-i18n="disclaimer"></p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="i18n.js"></script>
+  <script src="router.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -38,7 +38,7 @@ Dijkstra over the graph with blocked nodes (and their incident edges), blocked e
 - **Saving progress:** dataset, hazards and start are saved in localStorage and restored on reload
 - **Drag & drop** a JSON file onto the map to import it
 - Keyboard-accessible map nodes (Tab + Enter) and focus outlines
-- Light / dark theme follows the OS
+- "Safety signage" colour theme (exit-sign green routes, amber start, red hazards) with a Dark mode toggle (remembered)
 - Responsive layout (works on mobile)
 - Bundled sample auto-loads for a quick demo
 - Shareable state via URL, e.g. `?start=R1&block=C2&close=E1&lang=bn`

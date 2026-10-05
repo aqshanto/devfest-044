@@ -18,6 +18,8 @@
   let walkTimer = null;
   let previewExit = null; // exit whose alternative route is previewed
   try { hc = localStorage.getItem('se-hc') === '1'; } catch (e) { /* ignore */ }
+  let dark = false;
+  try { dark = localStorage.getItem('se-dark') === '1'; } catch (e) { /* ignore */ }
   let nodeEls = new Map();
   let edgeEls = new Map();
   let pos = new Map();    // node id -> {x, y} in SVG units
@@ -167,6 +169,8 @@
     document.documentElement.lang = lang;
     document.documentElement.classList.toggle('hc', hc);
     $('#hc').setAttribute('aria-pressed', hc);
+    document.documentElement.classList.toggle('dark', dark);
+    $('#theme').setAttribute('aria-pressed', dark);
     $('#png').disabled = !data;
     document.title = t('title');
     document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
@@ -454,6 +458,11 @@
   $('#hc').addEventListener('click', () => {
     hc = !hc;
     try { localStorage.setItem('se-hc', hc ? '1' : '0'); } catch (e) { /* ignore */ }
+    render();
+  });
+  $('#theme').addEventListener('click', () => {
+    dark = !dark;
+    try { localStorage.setItem('se-dark', dark ? '1' : '0'); } catch (e) { /* ignore */ }
     render();
   });
   $('#png').addEventListener('click', exportPng);

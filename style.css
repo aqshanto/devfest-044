@@ -1,29 +1,30 @@
+/* "Safety signage" theme: exit-sign green routes, amber "you are here", red hazards, warm paper background */
 :root {
-  --bg: #f1f5f9;
-  --card: #ffffff;
-  --ink: #0f172a;
-  --muted: #64748b;
-  --line: #cbd5e1;
-  --room: #2563eb;
-  --junction: #475569;
-  --exit: #059669;
-  --route: #1d4ed8;
-  --blocked: #dc2626;
-  --start: #f59e0b;
-  --node-fill: #ffffff;
-  --top: #0f1f3a;
-  --ok-bg: #dcfce7; --ok-ink: #166534;
-  --warn-bg: #fef3c7; --warn-ink: #92400e;
-  --err-bg: #fee2e2; --err-ink: #991b1b;
+  --bg: #f4efe4;
+  --card: #fffdf7;
+  --ink: #1d2a24;
+  --muted: #6d6a5f;
+  --line: #cbbfa6;
+  --room: #1f4e8c;
+  --junction: #55606b;
+  --exit: #00843d;
+  --route: #0aa04f;
+  --alt: #1f4e8c;
+  --blocked: #d62828;
+  --start: #f2b705;
+  --node-fill: #fffdf7;
+  --top: #0b4d2c;
+  --accent: #f2b705; --accent-ink: #1d2a24;
+  --ok-bg: #d8f3dc; --ok-ink: #0b4d2c;
+  --warn-bg: #fff1c2; --warn-ink: #7a5600;
+  --err-bg: #fde2e1; --err-ink: #9b1c1c;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1220; --card: #111a2e; --ink: #e2e8f0; --muted: #94a3b8; --line: #334155;
-    --room: #60a5fa; --junction: #94a3b8; --exit: #34d399; --route: #3b82f6;
-    --blocked: #f87171; --start: #fbbf24; --node-fill: #0f172a; --top: #060c18;
-    --ok-bg: #14532d; --ok-ink: #bbf7d0; --warn-bg: #713f12; --warn-ink: #fde68a;
-    --err-bg: #7f1d1d; --err-ink: #fecaca;
-  }
+:root.dark {
+  --bg: #0e1512; --card: #16201b; --ink: #e8efe9; --muted: #9aa89f; --line: #2c3a33;
+  --room: #7fb2ff; --junction: #a3b1a8; --exit: #2fcf75; --route: #3ddc84; --alt: #7fb2ff;
+  --blocked: #ff5a5a; --start: #ffc928; --node-fill: #0e1512; --top: #08120d;
+  --ok-bg: #123d26; --ok-ink: #c6f6d5; --warn-bg: #4a3a05; --warn-ink: #ffe9a3;
+  --err-bg: #4d1414; --err-ink: #ffd0d0;
 }
 
 /* High-contrast mode (toggle in header) */
@@ -35,7 +36,7 @@
 }
 :root.hc .node.on-route .nid, :root.hc .chip { color: #000; fill: #000; }
 :root.hc .edge line.vis { stroke-width: 5; }
-.btn[aria-pressed="true"] { background: #f59e0b; border-color: #f59e0b; color: #000; }
+.btn[aria-pressed="true"] { background: #f2b705; border-color: #f2b705; color: #1d2a24; }
 
 * { box-sizing: border-box; }
 body {
@@ -59,8 +60,8 @@ html[lang="bn"] body { font-family: 'Hind Siliguri', Inter, system-ui, sans-seri
 }
 .btn:hover { background: rgba(255,255,255,.18); }
 .btn:active { transform: scale(.97); }
-.btn-accent { background: #2563eb; border-color: #2563eb; }
-.btn-accent:hover { background: #1d4ed8; }
+.btn-accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn-accent:hover { filter: brightness(1.08); background: var(--accent); }
 .btn:focus-visible, .seg:focus-visible, select:focus-visible, .hz button:focus-visible { outline: 3px solid var(--start); outline-offset: 2px; }
 
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; padding: 16px; }
@@ -175,7 +176,7 @@ select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--
 .alt:hover { border-color: var(--start); }
 .alt[aria-pressed="true"] { border-color: var(--start); background: color-mix(in srgb, var(--start) 15%, transparent); }
 .alt .tag { float: right; font-size: 11px; font-weight: 700; color: var(--ok-ink); background: var(--ok-bg); padding: 1px 6px; border-radius: 999px; }
-.alt-line { fill: none; stroke: var(--start); stroke-width: 5; stroke-dasharray: 10 8; stroke-linecap: round; pointer-events: none; opacity: .95; animation: march 1s linear infinite; }
+.alt-line { fill: none; stroke: var(--alt); stroke-width: 5; stroke-dasharray: 10 8; stroke-linecap: round; pointer-events: none; opacity: .95; animation: march 1s linear infinite; }
 @keyframes march { to { stroke-dashoffset: -18; } }
 
 .hz { display: flex; flex-wrap: wrap; gap: 6px; }

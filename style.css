@@ -26,6 +26,17 @@
   }
 }
 
+/* High-contrast mode (toggle in header) */
+:root.hc {
+  --bg: #000; --card: #000; --ink: #fff; --muted: #e5e5e5; --line: #fff;
+  --room: #00e5ff; --junction: #fff; --exit: #00ff66; --route: #ffea00;
+  --blocked: #ff3b3b; --start: #ff00ff; --node-fill: #000; --top: #000;
+  --ok-bg: #003d1a; --ok-ink: #fff; --warn-bg: #3d3300; --warn-ink: #fff; --err-bg: #4d0000; --err-ink: #fff;
+}
+:root.hc .node.on-route .nid, :root.hc .chip { color: #000; fill: #000; }
+:root.hc .edge line.vis { stroke-width: 5; }
+.btn[aria-pressed="true"] { background: #f59e0b; border-color: #f59e0b; color: #000; }
+
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
@@ -162,3 +173,4 @@ select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+.btn:disabled { opacity: .45; cursor: not-allowed; }

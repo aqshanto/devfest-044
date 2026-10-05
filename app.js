@@ -13,6 +13,8 @@
   let mode = 'start';     // map click mode: 'start' | 'hazard'
   let errors = null;      // last import errors
   let lastRouteKey = '';
+  let hc = false;
+  try { hc = localStorage.getItem('se-hc') === '1'; } catch (e) { /* ignore */ }
   let nodeEls = new Map();
   let edgeEls = new Map();
   let pos = new Map();    // node id -> {x, y} in SVG units
@@ -159,6 +161,9 @@
   // ---------- Rendering ----------
   function renderStatic() {
     document.documentElement.lang = lang;
+    document.documentElement.classList.toggle('hc', hc);
+    $('#hc').setAttribute('aria-pressed', hc);
+    $('#png').disabled = !data;
     document.title = t('title');
     document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
     $('#modeStart').setAttribute('aria-checked', mode === 'start');
@@ -332,6 +337,49 @@
     try { localStorage.setItem('se-lang', lang); } catch (e) { /* ignore */ }
     render();
   });
+  $('#hc').addEventListener('click', () => {
+    hc = !hc;
+    try { localStorage.setItem('se-hc', hc ? '1' : '0'); } catch (e) { /* ignore */ }
+    render();
+  });
+  $('#png').addEventListener('click', exportPng);
+
+  // Export the current map (with route and hazards) as a PNG, inlining computed styles.
+  function exportPng() {
+    if (!data) return;
+    const src = $('#map');
+    const clone = src.cloneNode(true);
+    const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'opacity',
+      'font-size', 'font-weight', 'font-family', 'text-anchor', 'dominant-baseline', 'transform', 'transform-origin', 'transform-box'];
+    const a = src.querySelectorAll('*'), b = clone.querySelectorAll('*');
+    a.forEach((n, i) => {
+      const cs = getComputedStyle(n);
+      b[i].setAttribute('style', props.map(p => `${p}:${cs.getPropertyValue(p)}`).join(';') + ';animation:none');
+    });
+    clone.querySelectorAll('title').forEach(x => x.remove());
+    const vb = src.viewBox.baseVal;
+    const bg = document.createElementNS(SVG, 'rect');
+    bg.setAttribute('width', vb.width); bg.setAttribute('height', vb.height);
+    bg.setAttribute('fill', getComputedStyle(document.querySelector('.map-card')).backgroundColor);
+    clone.insertBefore(bg, clone.firstChild);
+    clone.setAttribute('xmlns', SVG);
+    clone.setAttribute('width', vb.width); clone.setAttribute('height', vb.height);
+    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml' }));
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = vb.width * 2; c.height = vb.height * 2;
+      const ctx = c.getContext('2d');
+      ctx.scale(2, 2);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      const link = document.createElement('a');
+      link.download = `smart-escape-${start || 'map'}.png`;
+      link.href = c.toDataURL('image/png');
+      link.click();
+    };
+    img.src = url;
+  }
   $('#modeStart').addEventListener('click', () => { mode = 'start'; render(); });
   $('#modeHazard').addEventListener('click', () => { mode = 'hazard'; render(); });
   $('#start').addEventListener('change', ev => setStart(ev.target.value));
